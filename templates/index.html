@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<head>
+    <title>Predictor app</title>
+    <style>
+        body {
+            text-align: center;
+            padding: 2vb;
+        }
+        button {
+            color: aliceblue;
+            background-color: blue;
+            padding: 5px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>Linear Regression Model</h1>
+    <div>
+        <form>
+            <input type="text" name='x' placeholder="Type your input here" id="xInput" />
+            <div>
+                <button id="get-data">
+                    Submit
+                </button>
+            </div>
+        </form>
+        <div id="display"></div>
+    </div>
+    <script>
+        const button = document.getElementById('get-data')
+        button.addEventListener('click', async (e) => {
+            e.preventDefault()
+            const data = await sendJSON();
+            const display_result = document.getElementById("display")
+            if(data.error){
+                display_result.innerHTML = `<p>Error: ${data.error}</p>`    
+            } else{
+                display_result.innerHTML = `<p>Prediction: ${data.prediction}</p>`
+            }
+        })
+
+        async function sendJSON() {
+            const x_input = document.getElementById('xInput').value
+            console.log(x_input)
+            if(!x_input){
+                return {"error": "Enter a valid number"}
+            }
+    
+            const data = {x: parseFloat(x_input)}
+
+            const response = await fetch("/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+            const result = await response.json()
+            return result
+        }
+    </script>
+</body>
+</html>
