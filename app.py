@@ -17,8 +17,9 @@ def predicted():
         print(data)
         if "x" not in data:
             return jsonify({"error": "Missing input key: 'x'"}), 400
-        if data["x"] == "None":
-            return jsonify({"error": "Invalid input"}), 500
+        
+        elif data["x"] == None:
+            return jsonify({"error": "Invalid input, please input a valid number"}), 500
         
         x = float(data["x"])
         prediction = model.predict(np.array([[x]]))
